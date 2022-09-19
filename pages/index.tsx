@@ -1,71 +1,262 @@
+import {
+  Box,
+  Button,
+  createStyles,
+  Divider,
+  Group,
+  InputBase,
+  Modal,
+  Select,
+  Text,
+  Textarea,
+  TextInput,
+} from '@mantine/core'
+import { useForm } from '@mantine/form'
+import { IconAt, IconPhone, IconUser, IconX } from '@tabler/icons'
 import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import { useState } from 'react'
+import FeaturingComponent from '../components/featuring.component'
+import FooterComponent from '../components/footer.component'
+import HeroComponent from '../components/hero.component'
+import TopBarComponent from '../components/topbar.component'
+import WebinarComponent from '../components/webinar.component'
+import InputMask from 'react-input-mask'
+import { showNotification } from '@mantine/notifications'
+
+const useStyles = createStyles(() => ({}))
 
 const Home: NextPage = () => {
+  const [registerOpened, setRegisterOpened] = useState(false)
+  const [comments, setComments] = useState(false)
+  const [success, setSuccess] = useState(false)
+
+  const [loading, setLoading] = useState(false)
+
+  const { theme } = useStyles()
+
+  const form = useForm({
+    initialValues: {
+      name: '',
+      email: '',
+      mobile: '',
+      year: '',
+    },
+    validate: {
+      name: (value) => (value.length < 3 ? 'Invalid name' : null),
+
+      email: (val) =>
+        /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(val)
+          ? null
+          : 'Invalid email',
+
+      mobile: (val) =>
+        /^(?:\+94|0)?[0-9]{9}$/.test(val.replace(/\s/g, ''))
+          ? null
+          : 'Invalid mobile number',
+
+      year: (val) => (val ? null : 'Please select a year'),
+    },
+  })
+
+  const commentsForm = useForm({
+    initialValues: {
+      question: '',
+    },
+    validate: {
+      question: (value) =>
+        value.split(' ').length < 3 ? 'Invalid question' : null,
+    },
+  })
+
+  const handleSubmit = async (data: {
+    name: string
+    email: string
+    mobile: string
+    year: string
+  }) => {
+    setLoading(true)
+
+    const response = await fetch('/api/user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+
+    const result = await response.json()
+
+    if (!response.ok) {
+      setLoading(false)
+
+      showNotification({
+        disallowClose: true,
+        message: (
+          <Text>
+            Failed to save details. {result.message || 'Please try again later'}
+          </Text>
+        ),
+        color: 'red',
+        icon: <IconX />,
+      })
+
+      return
+    }
+
+    setLoading(false)
+    setComments(true)
+  }
+
+  const handleCommentsSubmit = async (data: { question: string }) => {
+    setLoading(true)
+
+    const response = await fetch('/api/question', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ...data,
+        email: form.values.email,
+      }),
+    })
+
+    const result = await response.json()
+
+    if (!response.ok) {
+      setLoading(false)
+
+      showNotification({
+        disallowClose: true,
+        message: (
+          <Text>
+            Failed to save details. {result.message || 'Please try again later'}
+          </Text>
+        ),
+        color: 'red',
+        icon: <IconX />,
+      })
+
+      return
+    }
+
+    setLoading(false)
+    setSuccess(true)
+  }
+
+  let modelContent
+
+  if (success) {
+    modelContent = (
+      <Box>
+        <Text color={theme.colors.green[7]}>
+          Sucessfully registered for Embrace. We will be in touch with you
+          shortly.
+        </Text>
+
+        <Divider mt="xl" mb="xl" />
+
+        <Text color={theme.colors.green[7]}>Question submitted</Text>
+      </Box>
+    )
+  } else if (comments) {
+    modelContent = (
+      <form onSubmit={commentsForm.onSubmit(handleCommentsSubmit)}>
+        <Text color={theme.colors.green[7]}>
+          Sucessfully registered for Embrace. We will be in touch with you
+          shortly.
+        </Text>
+
+        <Divider mt="xl" mb="xl" />
+
+        <Textarea
+          label="Want to see your questions answered by Nihad? This is your chance!"
+          placeholder="What was your study plan like?"
+          {...commentsForm.getInputProps('question')}
+        />
+
+        <Group position="right" mt="md">
+          <Button type="submit" color="dark" loading={loading}>
+            Submit Question
+          </Button>
+        </Group>
+      </form>
+    )
+  } else {
+    modelContent = (
+      <form onSubmit={form.onSubmit(handleSubmit)}>
+        <TextInput
+          icon={<IconUser size={18} />}
+          required
+          mb="md"
+          label="Name"
+          placeholder="John Doe"
+          {...form.getInputProps('name')}
+        />
+
+        <TextInput
+          required
+          label="Email"
+          icon={<IconAt size={18} />}
+          mb="md"
+          placeholder="hello@example.com"
+          {...form.getInputProps('email')}
+        />
+
+        <InputBase
+          required
+          label="Mobile"
+          icon={<IconPhone size={18} />}
+          mb="md"
+          placeholder="071 234 5678"
+          {...form.getInputProps('mobile')}
+          component={InputMask}
+          mask="099 999 9999"
+        />
+
+        <Select
+          required
+          label="Exam Year"
+          placeholder="2022"
+          {...form.getInputProps('year')}
+          data={[
+            { value: '2021', label: '2021' },
+            { value: '2022', label: '2022' },
+            { value: '2023', label: '2023' },
+            { value: '2024', label: '2024' },
+          ]}
+        />
+
+        <Group position="right" mt="md">
+          <Button type="submit" color="dark" loading={loading}>
+            Submit
+          </Button>
+        </Group>
+      </form>
+    )
+  }
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <meta name="description" content="Generated by create next app" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <Box sx={{ overflow: 'hidden' }}>
+      <Modal
+        opened={registerOpened}
+        onClose={() => setRegisterOpened(false)}
+        title="Embrace registration"
+        centered
+      >
+        {modelContent}
+      </Modal>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+      <TopBarComponent modal={setRegisterOpened} />
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.tsx</code>
-        </p>
+      <HeroComponent modal={setRegisterOpened} />
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+      <WebinarComponent />
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
+      <FeaturingComponent />
 
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
-    </div>
+      <FooterComponent modal={setRegisterOpened} />
+    </Box>
   )
 }
 
