@@ -1,5 +1,6 @@
 import { Box, Button, Container, createStyles, Group, Stack, Text } from '@mantine/core'
 import Image from 'next/image'
+import Link from 'next/link'
 import mediaQuery from '../lib/media-query'
 import BackgroundImage from '../public/images/background.png'
 import EmbraceLogoImage from '../public/images/embrace_logo.png'
@@ -133,21 +134,23 @@ const HeroComponent = ({
     <Container size="xl" className={classes.hero}>
       <Box className={classes.content}>
         <Box className={classes.giveaway} p="sm">
-          <Button color="dark" size="xs">
-            <Group spacing={5}>
-              🔥
-              <Text
-                gradient={{
-                  from: '#858BD2',
-                  to: '#95ABE5',
-                  deg: 90,
-                }}
-                variant="gradient"
-              >
-                Be apart of the Giveaway
-              </Text>
-            </Group>
-          </Button>
+          <Link href="#giveaway-cont">
+            <Button color="dark" size="xs">
+              <Group spacing={5}>
+                🔥
+                <Text
+                  gradient={{
+                    from: '#858BD2',
+                    to: '#95ABE5',
+                    deg: 90,
+                  }}
+                  variant="gradient"
+                >
+                  Be apart of the Giveaway
+                </Text>
+              </Group>
+            </Button>
+          </Link>
         </Box>
 
         <Stack
@@ -172,10 +175,16 @@ const HeroComponent = ({
             sx={{ width: '50%', textAlign: 'center' }}
             className={classes.content_tagline}
           >
-            This is the tagline. Do whatever you want with it as long as it has
-            some kind of a meaning. Okay?
+            A series of live educational videocasts capturing true spirit of
+            learning
           </Text>
-          <Button size="md" color="dark" sx={{ width: 150 }} mt="xl" onClick={() => modal(true)}>
+          <Button
+            size="md"
+            color="dark"
+            sx={{ width: 150 }}
+            mt="xl"
+            onClick={() => modal(true)}
+          >
             JOIN
           </Button>
         </Stack>

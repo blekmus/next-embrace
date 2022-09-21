@@ -142,16 +142,16 @@ const useStyles = createStyles((theme) => ({
   },
 }))
 
-const WebinarComponent = () => {
+const GiveawayComponent = () => {
   const { classes } = useStyles()
 
   return (
-    <Container size="xl" className={classes.main_grid} mt={280}>
+    <Container size="xl" className={classes.main_grid} mt={280} id="giveaway-cont">
       <Box className={classes.title_grid}>
         <Title className={classes.title_text_big}>
-          More <br />
-          than just a<br />
-          <span>webinar</span>
+          Be apart <br />
+          of the <br />
+          <span>giveaway</span>
         </Title>
 
         <Title className={classes.title_text_small}>
@@ -160,7 +160,7 @@ const WebinarComponent = () => {
 
         <Text className={classes.title_desc}>
           {
-            "Embrace isn't only about concepts. It's about how you can use them. You'll..."
+            'Stand a chance to win two thyaga multistore e-gift vouchers every episode. Redeem them from over 90+ stores islandwide. To participate...'
           }
         </Text>
       </Box>
@@ -170,23 +170,17 @@ const WebinarComponent = () => {
           <li>
             <span>1</span>
             <Text className={classes.item_desc}>
-              Get your questions answered from the best of what the educational
-              world has to offer
+              The person who asks the best question will win a gift voucher. The
+              featured guest will be selecting the winner.
             </Text>
           </li>
 
           <li>
             <span>2</span>
             <Text className={classes.item_desc}>
-              Have free access to under appreciated aspect of modern learning
-            </Text>
-          </li>
-
-          <li>
-            <span>3</span>
-            <Text className={classes.item_desc}>
-              Interact with inspiring individuals who can help take your
-              academic prowess to the next level
+              Invite five of your friends to our embrace video cast community
+              and be eligible to win. The raffle draw will be held at the end of
+              the episode.
             </Text>
           </li>
         </ol>
@@ -195,4 +189,4 @@ const WebinarComponent = () => {
   )
 }
 
-export default WebinarComponent
+export default GiveawayComponent

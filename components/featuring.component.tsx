@@ -9,7 +9,7 @@ const useStyles = createStyles((theme) => ({
   base: {
     [mediaQuery[2]]: {
       marginTop: 150,
-    }
+    },
   },
 
   image_overlay: {
@@ -77,7 +77,24 @@ const useStyles = createStyles((theme) => ({
 
     [mediaQuery[1]]: {
       fontSize: '15px',
-    }
+    },
+  },
+
+  content_venue_live: {
+    fontFamily: 'Fira Code, monospace',
+    fontSize: '20px',
+    background: theme.colors.red[6],
+    padding: '0 10px',
+    color: 'white',
+    borderRadius: 20,
+
+    [mediaQuery[2]]: {
+      fontSize: '20px',
+    },
+
+    [mediaQuery[1]]: {
+      fontSize: '15px',
+    },
   },
 
   content_desc: {
@@ -88,7 +105,7 @@ const useStyles = createStyles((theme) => ({
 
     [mediaQuery[1]]: {
       fontSize: '15px',
-    }
+    },
   },
 
   content_sep: {
@@ -102,7 +119,12 @@ const FeaturingComponent = () => {
   const { classes, theme } = useStyles()
 
   return (
-    <Container size="xl" mt={280} sx={{ position: 'relative' }} className={classes.base}>
+    <Container
+      size="xl"
+      mt={280}
+      sx={{ position: 'relative' }}
+      className={classes.base}
+    >
       <Box className={classes.image_overlay}>
         <Image
           src={NihadImage}
@@ -126,7 +148,7 @@ const FeaturingComponent = () => {
           <Box className={classes.content_sep}>
             <Text className={classes.content_venue_text}>|</Text>
           </Box>
-          <Text className={classes.content_venue_text}>Live Videocast</Text>
+          <Text className={classes.content_venue_live}>Live</Text>
         </Group>
 
         <Text
@@ -135,9 +157,11 @@ const FeaturingComponent = () => {
           className={classes.content_desc}
           mb={60}
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies
-          laoreet mollis. Morbi pharetra dignissim tempor. Suspendisse potenti.
-          Nam ac tempus sapien. Duis aliquet efficitur eros quis
+          In this episode, we&apos;re joined by Nihad Nabawi who ranked 3rd
+          all-island in Advanced Level 2021. From his childhood dreams of making
+          YouTube videos to becoming an exceptional achiever in academics. Nihad
+          is ready to share his life journey <span style={{ color: theme.colors.red[8] }}>live</span> for the first
+          time with the Embrace community
         </Text>
 
         <Link href="https://aceacademy.lk/NihadNabawi" passHref>

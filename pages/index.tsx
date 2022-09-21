@@ -22,6 +22,7 @@ import TopBarComponent from '../components/topbar.component'
 import WebinarComponent from '../components/webinar.component'
 import InputMask from 'react-input-mask'
 import { showNotification } from '@mantine/notifications'
+import GiveawayComponent from '../components/giveaway.component'
 
 const useStyles = createStyles(() => ({}))
 
@@ -39,6 +40,7 @@ const Home: NextPage = () => {
       name: '',
       email: '',
       mobile: '',
+      // academics: '',
       year: '',
     },
     validate: {
@@ -170,7 +172,7 @@ const Home: NextPage = () => {
         <Divider mt="xl" mb="xl" />
 
         <Textarea
-          label="Want to see your questions answered by Nihad? This is your chance!"
+          label="Want to see your questions answered by our guest, Nihad Nabawi? Ask away!"
           placeholder="What was your study plan like?"
           {...commentsForm.getInputProps('question')}
         />
@@ -254,6 +256,8 @@ const Home: NextPage = () => {
       <WebinarComponent />
 
       <FeaturingComponent />
+
+      <GiveawayComponent />
 
       <FooterComponent modal={setRegisterOpened} />
     </Box>
