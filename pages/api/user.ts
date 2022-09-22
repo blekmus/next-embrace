@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '../../lib/prisma'
 import mailer from '../../lib/aws-ses'
 import { GoogleSpreadsheet } from 'google-spreadsheet'
 
@@ -46,37 +45,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const yearRegex = /^(?:1|2)[0-9]{3}$/
   if (!yearRegex.test(year)) {
     return res.status(400).json({ message: 'Invalid year' })
-  }
-
-  // check if user already exists
-  try {
-    const existingUser = await prisma.user.findUnique({
-      where: {
-        email,
-      },
-    })
-
-    if (existingUser) {
-      return res.status(200).send({ message: 'User already exists' })
-    }
-  } catch (error) {
-    console.log(error)
-    return res.status(500).json({ message: 'Internal server error' })
-  }
-
-  // create user
-  try {
-    await prisma.user.create({
-      data: {
-        name,
-        email,
-        mobile,
-        year,
-      },
-    })
-  } catch (error) {
-    console.error(error)
-    return res.status(500).json({ message: 'Internal server error' })
   }
 
   // send html email using aws ses

@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '../../lib/prisma'
 import { GoogleSpreadsheet } from 'google-spreadsheet'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -28,37 +27,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // check if question isn't empty
   if (question.trim().length === 0) {
     return res.status(400).json({ message: 'Question is empty' })
-  }
-
-  // check if user already exists
-  try {
-    const existingUser = await prisma.user.findUnique({
-      where: {
-        email,
-      },
-    })
-
-    if (!existingUser) {
-      return res.status(400).json({ message: 'User does not exist' })
-    }
-  } catch (error) {
-    return res.status(500).json({ message: 'Internal server error' })
-  }
-
-  try {
-    // create question
-    await prisma.userQuestion.create({
-      data: {
-        question,
-        user: {
-          connect: {
-            email,
-          },
-        },
-      },
-    })
-  } catch (error) {
-    return res.status(500).json({ message: 'Internal server error' })
   }
 
   // send data to google spreadsheet
