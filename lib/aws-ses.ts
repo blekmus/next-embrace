@@ -1,8 +1,10 @@
 import AWS from 'aws-sdk'
+import fs from 'fs/promises'
+import path from 'path'
 
 AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  accessKeyId: process.env.SITE_AWS_ACCESS_KEY,
+  secretAccessKey: process.env.SITE_AWS_SECRET_ACCESS_KEY,
   region: 'ap-southeast-1',
 })
 
@@ -13,6 +15,12 @@ AWS.config.getCredentials(function (error) {
 })
 
 const mailer = async (email: string) => {
+  // get html file from mails/confirmation.html
+  const html = await fs.readFile(
+    path.join(process.cwd(), 'mails', 'confirmation.html'),
+    'utf8'
+  )
+
   const params = {
     Source: `Ace Academy <noreply@aceacademy.lk>`,
     Destination: {
@@ -21,12 +29,12 @@ const mailer = async (email: string) => {
     Message: {
       Subject: {
         Charset: 'UTF-8',
-        Data: 'This is the subject',
+        Data: 'Embrace - Successfully Registered',
       },
       Body: {
-        Text: {
+        Html: {
           Charset: 'UTF-8',
-          Data: `This is the data`,
+          Data: html,
         },
       },
     },
